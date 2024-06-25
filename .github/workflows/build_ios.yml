@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - master  # Ensure this matches your default branch
 
 jobs:
   build:
@@ -11,12 +12,12 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4  # Ensure you are using v3 for Node.js 20 support
 
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: 'latest'
+        flutter-version: '3.19.5'  # Specify a compatible version of Flutter
 
     - name: Install dependencies
       run: flutter pub get
@@ -24,9 +25,12 @@ jobs:
     - name: Build iOS
       run: flutter build ios --release --no-codesign
 
+    - name: List build directory for debug
+      run: find build/ios -type f
+
     - name: Archive iOS build
       if: success()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4  # Ensure you are using v3 for Node.js 20 support
       with:
         name: ios-build
         path: build/ios/iphoneos/*.ipa
